@@ -13,10 +13,12 @@ namespace Phoneshop.Bussiness.Logic
     public class BrandService : IBrandService
     {
         private readonly IRepository<Brand> brandRepository;
+        private readonly IGenericRepository<Brand> gbrandRepository;
 
-        public BrandService(IRepository<Brand> brandRepository)
+        public BrandService(IRepository<Brand> brandRepository, IGenericRepository<Brand> gbrandRepository)
         {
             this.brandRepository = brandRepository;
+            this.gbrandRepository = gbrandRepository;
             this.brandRepository.Mapper = PhoneMapper;
         }
 
@@ -38,11 +40,27 @@ namespace Phoneshop.Bussiness.Logic
             return result;
         }
 
+        public Brand GetOrCreate2(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException(nameof(name));
+
+            var result = gbrandRepository.G;
+
+            if (result == null)
+            {
+                Create(new Brand { Name = name });
+                return GetOrCreate(name);
+            }
+
+            return result;
+        }
+
+
         public void Create(Brand brand)
         {
-            var command = new SqlCommand("INSERT INTO Brands (Name) VALUES (@BrandName)");
-            command.Parameters.AddWithValue("BrandName", brand.Name);
-            brandRepository.ExecuteNonQuery(command);
+            gbrandRepository.Insert(brand);
+            gbrandRepository.Save();
         }
 
         [ExcludeFromCodeCoverage]
