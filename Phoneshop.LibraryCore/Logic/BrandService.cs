@@ -15,7 +15,7 @@ namespace Phoneshop.Bussiness.Logic
     {
         private readonly IRepository<Brand> brandRepository;
         private readonly IGenericRepository<Brand> gbrandRepository;
-
+        
         public BrandService(IRepository<Brand> brandRepository, IGenericRepository<Brand> gbrandRepository)
         {
             this.brandRepository = brandRepository;
@@ -23,8 +23,8 @@ namespace Phoneshop.Bussiness.Logic
             this.brandRepository.Mapper = PhoneMapper;
         }
 
-        
 
+        
         public Brand GetOrCreate(string name)
         {
             if (string.IsNullOrEmpty(name))
@@ -34,14 +34,14 @@ namespace Phoneshop.Bussiness.Logic
 
             if (result == null)
             {
-                Create(new Brand { Name = name });
-                return GetOrCreate(name);
+               Brand brand = Create(new Brand { Name = name } );
+                return brand;
             }
 
             return result;
         }
 
-
+        
         public Brand Create(Brand brand)
         {
             gbrandRepository.Insert(brand);

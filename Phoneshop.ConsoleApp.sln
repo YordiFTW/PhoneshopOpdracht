@@ -9,9 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phoneshop.Domain", "Photosh
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phoneshop.Bussiness", "Phoneshop.LibraryCore\Phoneshop.Bussiness.csproj", "{D4FF4055-351F-4CF6-8ED2-4925896D7945}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phoneshop.Testsss", "Phoneshop.Testsss\Phoneshop.Testsss.csproj", "{AAF2D822-9C15-4D12-962E-CD5ADD1332EF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Phoneshop.Testsssss", "Phoneshop.Testsssss\Phoneshop.Testsssss.csproj", "{22108FAD-751A-4D9F-8082-BE799BB0C84C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phoneshop.Testsssss", "Phoneshop.Testsssss\Phoneshop.Testsssss.csproj", "{22108FAD-751A-4D9F-8082-BE799BB0C84C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,10 +29,6 @@ Global
 		{D4FF4055-351F-4CF6-8ED2-4925896D7945}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4FF4055-351F-4CF6-8ED2-4925896D7945}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4FF4055-351F-4CF6-8ED2-4925896D7945}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AAF2D822-9C15-4D12-962E-CD5ADD1332EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AAF2D822-9C15-4D12-962E-CD5ADD1332EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AAF2D822-9C15-4D12-962E-CD5ADD1332EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AAF2D822-9C15-4D12-962E-CD5ADD1332EF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{22108FAD-751A-4D9F-8082-BE799BB0C84C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{22108FAD-751A-4D9F-8082-BE799BB0C84C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22108FAD-751A-4D9F-8082-BE799BB0C84C}.Release|Any CPU.ActiveCfg = Release|Any CPU
