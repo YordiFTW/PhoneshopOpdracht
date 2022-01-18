@@ -10,6 +10,7 @@ namespace Phoneshop.Domain.Interfaces
     {
         IEnumerable<T> GetAll();
         T GetById(object id);
+        T GetByObj(T obj);
         void Insert(T obj);
         void Update(T obj);
         void DeleteById(object id);

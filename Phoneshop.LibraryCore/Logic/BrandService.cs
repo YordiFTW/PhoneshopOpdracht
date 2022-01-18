@@ -3,6 +3,7 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Phoneshop.Bussiness.Logic.Extensions;
 using Phoneshop.Domain.Interfaces;
 using Phoneshop.Domain.Objects;
@@ -22,30 +23,14 @@ namespace Phoneshop.Bussiness.Logic
             this.brandRepository.Mapper = PhoneMapper;
         }
 
+        
+
         public Brand GetOrCreate(string name)
         {
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException(nameof(name));
 
-            var command = new SqlCommand("SELECT * FROM brands WHERE name = '" + name + "'");
-
-            var result = brandRepository.GetRecord(command);
-
-            if (result == null)
-            {
-                Create(new Brand { Name = name });
-                return GetOrCreate(name);
-            }
-
-            return result;
-        }
-
-        public Brand GetOrCreate2(string name)
-        {
-            if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException(nameof(name));
-
-            var result = gbrandRepository.G;
+            Brand result = gbrandRepository.GetAll().SingleOrDefault(x => x.Name == name);
 
             if (result == null)
             {
@@ -57,10 +42,12 @@ namespace Phoneshop.Bussiness.Logic
         }
 
 
-        public void Create(Brand brand)
+        public Brand Create(Brand brand)
         {
             gbrandRepository.Insert(brand);
             gbrandRepository.Save();
+
+            return brand;
         }
 
         [ExcludeFromCodeCoverage]

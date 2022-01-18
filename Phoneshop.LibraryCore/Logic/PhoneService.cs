@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Phoneshop.Bussiness.Logic.Extensions;
 using Phoneshop.Domain.Interfaces;
 using Phoneshop.Domain.Objects;
@@ -16,30 +17,30 @@ namespace Phoneshop.Bussiness.Logic
 
         private readonly IRepository<Phone> phoneRepository;
         private readonly IBrandService brandService;
+        private readonly IGenericRepository<Phone> gphoneRepository;
+        private readonly IGenericRepository<Brand> gbrandRepository;
 
-        public PhoneService(IRepository<Phone> phoneRepository, IBrandService brandService)
+        public PhoneService(IRepository<Phone> phoneRepository, IBrandService brandService, IGenericRepository<Phone> gphoneRepository, IGenericRepository<Brand> gbrandRepository)
         {
             this.phoneRepository = phoneRepository;
             this.brandService = brandService;
+            this.gphoneRepository = gphoneRepository;
+            this.gbrandRepository = gbrandRepository;
             phoneRepository.Mapper = PhoneMapper;
         }
+
 
         public Phone Get(int id)
         {
             if (id <= 0) return null;
 
-            using (var command = new SqlCommand("SELECT * FROM phones WHERE Id=" + id))
-            {
-                return phoneRepository.GetRecord(command);
-            }
+            return gphoneRepository.GetById(id);
         }
 
         public IEnumerable<Phone> Get()
         {
-            using (var command = new SqlCommand("SELECT phones.*, Brands.Id as BrandsId, Brands.Name as BrandName FROM phones INNER JOIN Brands ON phones.BrandId = brands.id Order By Brands.Name"))
-            {
-                return phoneRepository.GetRecords(command);
-            }
+            gbrandRepository.GetAll();
+            return gphoneRepository.GetAll();
         }
 
         public IEnumerable<Phone> Search(string query)
@@ -47,39 +48,35 @@ namespace Phoneshop.Bussiness.Logic
             if (string.IsNullOrEmpty(query))
                 throw new ArgumentNullException(nameof(query));
 
-            var moviesFromDb = phoneRepository.GetRecords(new SqlCommand($"SELECT phones.*, Brands.Id as BrandsId, Brands.Name as BrandName FROM phones " +
-                $"INNER JOIN Brands ON phones.BrandId = brands.id " +
-                $"WHERE Type like '%{query}%' OR description like '%{query}%' OR Brands.Name like '%{query}%' Order By Brands.Name"));
+            
+            gbrandRepository.GetAll();
+            
 
-            return moviesFromDb;
+            return gphoneRepository.GetAll().Where(x => x.FullName.Contains(query));
         }
 
-        public void Create(Phone phone)
+
+        public Phone Create(Phone phone)
         {
-            var found = phoneRepository
-                .GetRecord(new SqlCommand($@"select TOP 1 * FROM phones P
-                                            INNER JOIN brands B on P.brandid = B.Id
-                                            WHERE P.[Type] = '{phone.Type}' AND B.Name = '{phone.Brand.Name}'"));
+            var found = gphoneRepository.GetAll().SingleOrDefault(x => x.FullName == phone.FullName);
 
             if (found != null)
                 throw new Exception($"Phone {phone.Brand.Name} - {phone.Type} already exists");
 
             var brand = brandService.GetOrCreate(phone.Brand.Name);
 
-            var command = new SqlCommand("INSERT INTO Phones (BrandId, Stock, Type, Description, Price) VALUES (@BrandId, @Stock, @Type, @Description, @Price)");
-            command.Parameters.AddWithValue("@BrandId", brand.Id);
-            command.Parameters.AddWithValue("@Description", phone.Description);
-            command.Parameters.AddWithValue("@Type", phone.Type);
-            command.Parameters.AddWithValue("@Price", phone.Price);
-            command.Parameters.AddWithValue("@Stock", phone.Stock);
+            gphoneRepository.Insert(phone);
+            gphoneRepository.Save();
 
-            phoneRepository.ExecuteNonQuery(command);
+            return phone;
         }
 
-        public void Create(List<Phone> phones)
+        public List<Phone> Create(List<Phone> phones)
         {
             foreach (var item in phones)
                 Create(item);
+
+            return phones;
         }
 
         public void Delete(int id)
@@ -87,10 +84,8 @@ namespace Phoneshop.Bussiness.Logic
             if (id <= 0)
                 throw new ArgumentNullException(nameof(id));
 
-            var command = new SqlCommand("DELETE FROM Phones WHERE Id=@id");
-            command.Parameters.AddWithValue("@id", id);
-
-            phoneRepository.ExecuteNonQuery(command);
+            gphoneRepository.DeleteById(id);
+            gphoneRepository.Save();
         }
 
         [ExcludeFromCodeCoverage]

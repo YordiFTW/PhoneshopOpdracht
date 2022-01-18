@@ -76,6 +76,13 @@ namespace Phoneshop.Bussiness.Logic.Repositories
             //T existing = table.Remove(obj);
             table.Remove(obj);
         }
+
+        public T GetByObj(T obj)
+        {
+            //T existing = table.Remove(obj);
+            return table.Find(obj);
+        }
+
         public void Save()
         {
             _context.SaveChanges();

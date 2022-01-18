@@ -29,13 +29,13 @@ namespace Phoneshop.Domain.Interfaces
         /// Creates a single phone and writes it to the datasource
         /// </summary>
         /// <param name="phone">A single <seealso cref="Phone"/>, without an identifier, the should be saved to the datasource.</param>
-        void Create(Phone phone);
+        Phone Create(Phone phone);
 
         /// <summary>
         /// Creates a set of phones and writes them to the datasource
         /// </summary>
         /// <param name="phones">A lost of <seealso cref="Phone"/>, without an identifier, the should be saved to the datasource.</param>
-        void Create(List<Phone> phones);
+        List<Phone> Create(List<Phone> phones);
 
         /// <summary>
         /// Deletes an existing phone from the data source.
